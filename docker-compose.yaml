@@ -1,0 +1,19 @@
+services:
+  moltbot:
+    image: khal3d/moltbot:latest
+    container_name: moltbot
+    ports:
+      - "${MOLTBOT_GATEWAY_PORT:-18789}:18789"
+      - "${MOLTBOT_BRIDGE_PORT:-18790}:18790"
+    volumes:
+      - ./data/moltbot-config:/root/.clawdbot
+      - ./data/moltbot-workspace:/root/clawd
+    healthcheck:
+      test: [ "CMD", "clawdbot", "health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    environment:
+      CLAWDBOT_GATEWAY_TOKEN: ${MOLTBOT_GATEWAY_TOKEN}
+    restart: unless-stopped
