@@ -1,10 +1,10 @@
-# MoltBot Deployment Bundle (Formerly ClawdBot)
+# openclaw Deployment Bundle (Formerly ClawdBot/MoltBot)
 
-This repository packages everything you need to run **MoltBot** locally with Docker. It includes a container image build, a Docker Compose definition.
+This repository packages everything you need to run **openclaw** locally with Docker. It includes a container image build, a Docker Compose definition.
 
 ## Contents
 
-- `Dockerfile` — builds a lightweight image that installs the `clawdbot` CLI and runs the gateway service.
+- `Dockerfile` — builds a lightweight image that installs the `openclaw` CLI and runs the gateway service.
 - `docker-compose.yaml` — starts the service locally with persistent volumes and health checks.
 
 ## Docker
@@ -12,7 +12,7 @@ This repository packages everything you need to run **MoltBot** locally with Doc
 ### Build the image
 
 ```bash
-docker build -t moltbot:local .
+docker build -t openclaw:local .
 ```
 
 ### Run with Docker
@@ -21,10 +21,9 @@ docker build -t moltbot:local .
 docker run -it --rm \
   -p 18789:18789 \
   -p 18791:18791 \
-  -e CLAWDBOT_GATEWAY_TOKEN="<token>" \
-  -v "$(pwd)/data/moltbot-config:/root/.clawdbot" \
-  -v "$(pwd)/data/moltbot-workspace:/root/clawd" \
-  moltbot:local
+  -e OPENCLAW_GATEWAY_TOKEN="<token>" \
+  -v "$(pwd)/data/openclaw-config:/root/.openclaw" \
+  openclaw:local
 ```
 
 The image exposes ports `18789` (gateway UI/API) and `18791` (bridge) by default. The data directories are persisted under `./data/` in the example above.
@@ -42,39 +41,39 @@ The compose file maps the following defaults:
 - Gateway: `18789` → `18789`
 - Bridge: `18790` → `18790`
 
-You can override the ports with `MOLTBOT_GATEWAY_PORT` and `MOLTBOT_BRIDGE_PORT`, and provide required secrets via environment variables:
+You can override the ports with `OPENCLAW_GATEWAY_PORT` and `OPENCLAW_BRIDGE_PORT`, and provide required secrets via environment variables:
 
-- `MOLTBOT_GATEWAY_TOKEN`
+- `OPENCLAW_GATEWAY_TOKEN`
 
-Data persists in `./data/moltbot-config` and `./data/moltbot-workspace` by default.
+Data persists in `./data/openclaw-config` and `./data/openclaw-workspace` by default.
 
 ## Helm (Kubernetes)
 
 Install the chart and configure the gateway token (either via an existing Secret or via a value):
 
 ```bash
-helm install moltbot ./moltbot-chart \
+helm install openclaw ./openclaw-chart \
   --set gateway.tokenSecret.value="<token>"
 ```
 
 To reuse an existing Secret instead of embedding the token in values:
 
 ```bash
-helm install moltbot ./moltbot-chart \
-  --set gateway.tokenSecret.existingSecret="moltbot-gateway-token" \
-  --set gateway.tokenSecret.key="CLAWDBOT_GATEWAY_TOKEN"
+helm install openclaw ./openclaw-chart \
+  --set gateway.tokenSecret.existingSecret="openclaw-gateway-token" \
+  --set gateway.tokenSecret.key="OPENCLAW_GATEWAY_TOKEN"
 ```
 
 Once the pod is running, execute the one-time setup inside the container:
 
 ```bash
-kubectl exec -it deploy/moltbot -- clawdbot setup
+kubectl exec -it deploy/openclaw -- openclaw setup
 ```
 
 To access the UI locally, port-forward the gateway service port:
 
 ```bash
-kubectl port-forward svc/moltbot 8080:18789
+kubectl port-forward svc/openclaw 8080:18789
 ```
 
 ## Notes
@@ -108,7 +107,7 @@ Fix options:
 - Or paste the correct token in: Control UI → Config → Gateway → Gateway Token
 
 Then restart the gateway with the same token:
-  export MOLTBOT_GATEWAY_TOKEN="<your-token>"
+  export OPENCLAW_GATEWAY_TOKEN="<your-token>"
 ```
 
 ### Pairing Required
@@ -117,8 +116,8 @@ Then restart the gateway with the same token:
 Fix:
 ```
 List pending device requests:
-  clawdbot devices list
+  openclaw devices list
 
 Approve a pending request:
-  clawdbot devices approve <PENDING_REQUEST_ID>
+  openclaw devices approve <PENDING_REQUEST_ID>
 ```

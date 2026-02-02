@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "moltbot-chart.fullname" . }}
+  name: {{ include "openclaw-chart.fullname" . }}
   labels:
-    {{- include "moltbot-chart.labels" . | nindent 4 }}
+    {{- include "openclaw-chart.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -16,4 +16,4 @@ spec:
       targetPort: bridge
       protocol: TCP
   selector:
-    {{- include "moltbot-chart.selectorLabels" . | nindent 4 }}
+    {{- include "openclaw-chart.selectorLabels" . | nindent 4 }}

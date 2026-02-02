@@ -1,4 +1,4 @@
-# Default values for moltbot-chart.
+# Default values for openclaw-chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -9,14 +9,14 @@ deployment:
     type: Recreate
 
 image:
-  repository: khal3d/moltbot
+  repository: khal3d/openclaw
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
 imagePullSecrets: []
 nameOverride: "molt"
-fullnameOverride: "moltbot"
+fullnameOverride: "openclaw"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -49,7 +49,7 @@ gateway:
     # If set, use an existing Secret with this name.
     existingSecret: ""
     # Key to read from the secret.
-    key: "CLAWDBOT_GATEWAY_TOKEN"
+    key: "OPENCLAW_GATEWAY_TOKEN"
     # If set and existingSecret is empty, create a Secret from this value.
     value: ""
 

@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "moltbot-chart.fullname" . }}-config
+  name: {{ include "openclaw-chart.fullname" . }}-config
   labels:
-    {{- include "moltbot-chart.labels" . | nindent 4 }}
+    {{- include "openclaw-chart.labels" . | nindent 4 }}
   annotations:
     "helm.sh/resource-policy": keep
 spec:
@@ -23,9 +23,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "moltbot-chart.fullname" . }}-workspace
+  name: {{ include "openclaw-chart.fullname" . }}-workspace
   labels:
-    {{- include "moltbot-chart.labels" . | nindent 4 }}
+    {{- include "openclaw-chart.labels" . | nindent 4 }}
   annotations:
     "helm.sh/resource-policy": keep
 spec:

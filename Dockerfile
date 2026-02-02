@@ -5,17 +5,17 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends bash ca-certificates curl git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install MoltBot (Formerly ClawdBot) globally
-RUN npm install -g clawdbot@latest
+# Install OpenClaw (Formerly ClawdBot/MoltBot) globally
+RUN npm install -g openclaw@latest
 
 WORKDIR /root
 
 # Declare volumes for persistence
-VOLUME ["/root/.clawdbot", "/root/clawdbot"]
+VOLUME ["/root/.openclaw"]
 
-# Clawdbot host UI port
+# OpenClaw host UI port
 EXPOSE 18789
 EXPOSE 18791
 
-# Start the Gateway (MoltBot's long-running service)
-CMD ["clawdbot", "gateway", "--allow-unconfigured", "--bind", "lan"]
+# Start the Gateway (OpenClaw's long-running service)
+CMD ["openclaw", "gateway", "--allow-unconfigured", "--bind", "lan"]

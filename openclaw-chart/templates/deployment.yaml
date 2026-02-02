@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "moltbot-chart.fullname" . }}
+  name: {{ include "openclaw-chart.fullname" . }}
   labels:
-    {{- include "moltbot-chart.labels" . | nindent 4 }}
+    {{- include "openclaw-chart.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -14,7 +14,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "moltbot-chart.selectorLabels" . | nindent 6 }}
+      {{- include "openclaw-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -22,13 +22,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "moltbot-chart.selectorLabels" . | nindent 8 }}
+        {{- include "openclaw-chart.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "moltbot-chart.serviceAccountName" . }}
+      serviceAccountName: {{ include "openclaw-chart.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -46,23 +46,23 @@ spec:
               protocol: TCP
           env:
             {{- if .Values.gateway.tokenSecret.existingSecret }}
-            - name: CLAWDBOT_GATEWAY_TOKEN
+            - name: OPENCLAW_GATEWAY_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.gateway.tokenSecret.existingSecret }}
                   key: {{ .Values.gateway.tokenSecret.key }}
             {{- else if .Values.gateway.tokenSecret.value }}
-            - name: CLAWDBOT_GATEWAY_TOKEN
+            - name: OPENCLAW_GATEWAY_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "moltbot-chart.fullname" . }}-gateway-token
+                  name: {{ include "openclaw-chart.fullname" . }}-gateway-token
                   key: {{ .Values.gateway.tokenSecret.key }}
             {{- end }}
           {{- if .Values.health.enabled }}
           livenessProbe:
             exec:
               command:
-                - clawdbot
+                - openclaw
                 - health
             initialDelaySeconds: 20
             periodSeconds: 30
@@ -71,7 +71,7 @@ spec:
           readinessProbe:
             exec:
               command:
-                - clawdbot
+                - openclaw
                 - health
             initialDelaySeconds: 10
             periodSeconds: 15
@@ -80,7 +80,7 @@ spec:
           startupProbe:
             exec:
               command:
-                - clawdbot
+                - openclaw
                 - health
             periodSeconds: 10
             timeoutSeconds: 5
@@ -88,9 +88,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: config
-              mountPath: /root/.clawdbot
-            - name: workspace
-              mountPath: /root/clawdbot
+              mountPath: /root/.openclaw
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -100,7 +98,7 @@ spec:
             claimName: {{ .Values.persistence.config.existingClaim }}
           {{- else if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "moltbot-chart.fullname" . }}-config
+            claimName: {{ include "openclaw-chart.fullname" . }}-config
           {{- else }}
           emptyDir: {}
           {{- end }}
@@ -110,7 +108,7 @@ spec:
             claimName: {{ .Values.persistence.workspace.existingClaim }}
           {{- else if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "moltbot-chart.fullname" . }}-workspace
+            claimName: {{ include "openclaw-chart.fullname" . }}-workspace
           {{- else }}
           emptyDir: {}
           {{- end }}
