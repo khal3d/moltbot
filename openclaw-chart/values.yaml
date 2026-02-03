@@ -64,12 +64,6 @@ persistence:
     accessModes:
       - ReadWriteOnce
     size: 1Gi
-  workspace:
-    existingClaim: ""
-    storageClass: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 5Gi
 
 ingress:
   enabled: false

@@ -102,16 +102,6 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-        - name: workspace
-          {{- if and .Values.persistence.enabled .Values.persistence.workspace.existingClaim }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.workspace.existingClaim }}
-          {{- else if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ include "openclaw-chart.fullname" . }}-workspace
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

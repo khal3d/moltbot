@@ -17,25 +17,5 @@ spec:
   {{- if .Values.persistence.config.storageClass }}
   storageClassName: {{ .Values.persistence.config.storageClass }}
   {{- end }}
----
-{{- end }}
-{{- if not .Values.persistence.workspace.existingClaim }}
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ include "openclaw-chart.fullname" . }}-workspace
-  labels:
-    {{- include "openclaw-chart.labels" . | nindent 4 }}
-  annotations:
-    "helm.sh/resource-policy": keep
-spec:
-  accessModes:
-    {{- toYaml .Values.persistence.workspace.accessModes | nindent 4 }}
-  resources:
-    requests:
-      storage: {{ .Values.persistence.workspace.size }}
-  {{- if .Values.persistence.workspace.storageClass }}
-  storageClassName: {{ .Values.persistence.workspace.storageClass }}
-  {{- end }}
 {{- end }}
 {{- end }}
