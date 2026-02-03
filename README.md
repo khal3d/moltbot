@@ -1,6 +1,6 @@
-# openclaw Deployment Bundle (Formerly ClawdBot/MoltBot)
+# OpenClaw Deployment Bundle (Formerly ClawdBot/MoltBot)
 
-This repository packages everything you need to run **openclaw** locally with Docker. It includes a container image build, a Docker Compose definition.
+This repository packages everything you need to run **OpenClaw** locally with Docker. It includes a container image build, a Docker Compose definition.
 
 ## Contents
 
@@ -36,6 +36,28 @@ Start the service using the published image:
 docker compose up -d
 ```
 
+### First-time setup and CLI workflow
+
+Once the containers are running, enter the `openclaw` container and run the CLI setup + approval flow:
+
+```bash
+docker compose exec openclaw bash
+openclaw setup
+openclaw dashboard # (Copy the dashboard URL with the token)
+openclaw devices list
+openclaw devices approve <REQUEST ID>
+openclaw configure # Configure a channel & model
+```
+
+Notes:
+
+- `openclaw setup` performs the one-time initialization and prepares the workspace under `/root/.openclaw`.
+- `openclaw dashboard` prints a tokenized Control UI URL. Open it in your browser (usually `http://localhost:18789/?token=...`).
+- `openclaw devices list` shows pending pairing requests from the Control UI.
+- `openclaw devices approve <REQUEST ID>` authorizes a pending request so the Control UI can connect.
+- `openclaw configure` sets the default channel and model that the gateway should use.
+
+
 The compose file maps the following defaults:
 
 - Gateway: `18789` → `18789`
@@ -70,11 +92,24 @@ Once the pod is running, execute the one-time setup inside the container:
 kubectl exec -it deploy/openclaw -- openclaw setup
 ```
 
+To complete the full CLI workflow (pairing, approving, configuring) inside Kubernetes, start a shell and run the same commands as Docker Compose:
+
+```bash
+kubectl exec -it deploy/openclaw -- bash
+openclaw setup
+openclaw dashboard # (Copy the dashboard URL with the token)
+openclaw devices list
+openclaw devices approve <REQUEST ID>
+openclaw configure # Configure a channel & model
+```
+
 To access the UI locally, port-forward the gateway service port:
 
 ```bash
 kubectl port-forward svc/openclaw 8080:18789
 ```
+
+This maps the in-cluster gateway port (`18789`) to your local machine on `http://localhost:8080`. Open the Control UI using the tokenized URL from `openclaw dashboard`, swapping the host/port to `http://localhost:8080/?token=...`.
 
 ## Notes
 
